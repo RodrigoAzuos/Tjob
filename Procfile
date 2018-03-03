@@ -1,0 +1,1 @@
+web: gunicorn Tjob.wsgi --log-file -
