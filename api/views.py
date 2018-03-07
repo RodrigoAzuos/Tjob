@@ -51,8 +51,8 @@ class JobViewSet(DefaultsMixin, viewsets.ModelViewSet):
 
         qs = Job.objects.order_by('-criado_em')
         if not self.request.user.is_superuser:
-            qs = Job.objects.filter(publico=True)
-            qs2 = Job.objects.filter(criador__endereco__cidade=self.request.user.perfil.endereco.cidade)
+            qs = Job.objects.filter(publico=True).order_by('-criado_em')
+            qs2 = Job.objects.filter(criador__endereco__cidade=self.request.user.perfil.endereco.cidade).order_by('-criado_em')
 
             qs = qs | qs2
 
@@ -85,7 +85,8 @@ class JobViewSet(DefaultsMixin, viewsets.ModelViewSet):
     @api_view()
     @authentication_classes(authentication_classes=DefaultsMixin.authentication_classes)
     @permission_classes(permission_classes=DefaultsMixin.permission_classes)
-    def escolhido(request, perfil_pk, job_pk):
+    def escolhido(request, job_pk, perfil_pk):
+
         try:
             job = Job.objects.get(pk=job_pk)
             perfil = Perfil.objects.get(pk=perfil_pk)
@@ -95,7 +96,7 @@ class JobViewSet(DefaultsMixin, viewsets.ModelViewSet):
         except:
             return Response({"mensagem": "Perfil ou Job não encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({"mensagem": "Não realizado"}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view()
     @authentication_classes(authentication_classes=DefaultsMixin.authentication_classes)
@@ -105,11 +106,11 @@ class JobViewSet(DefaultsMixin, viewsets.ModelViewSet):
         try:
             job = Job.objects.get(pk=job_pk)
             if job.reabrir_job():
-                return Response({"mensagem": "Job reaberto!"}, status=status.HTTP_200_OK)
+                return Response({"mensage": "Job reaberto!"}, status=status.HTTP_200_OK)
         except:
-            return Response({"mensage": "Job não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"mensagem": "Job não encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({"mensagem": "Não realizado"},status=status.HTTP_400_BAD_REQUEST)
 
 
 class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
@@ -128,9 +129,9 @@ class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
             user = request.user
 
             if user.perfil.curtir(job):
-                return Response(status=status.HTTP_200_OK)
+                return Response({"mensagem": "Job curtido!"}, status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({"mensagem": "falha."}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view()
     @authentication_classes(authentication_classes=DefaultsMixin.authentication_classes)
@@ -141,9 +142,9 @@ class PerfilViewSet(DefaultsMixin, viewsets.ModelViewSet):
             user = request.user
 
             if user.perfil.descurtir(job):
-                return Response(status=status.HTTP_200_OK)
+                return Response({"mensagem": "Job retirado da lista de curtidas!"}, status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({"mensagem": "falha!"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -265,9 +266,14 @@ class PerfilLogado(DefaultsMixin, viewsets.ModelViewSet):
     serializer_class = PerfilSerializer
     queryset = Perfil.objects.all()
 
+
     def get_queryset(self):
+        qs = None
+        try:
+            perfil_pk = self.request.user.perfil.pk
+        except:
+            return qs
         qs = Perfil.objects.all()
-        perfil_pk = self.request.user.perfil.pk
         qs = qs.filter(pk=perfil_pk)
 
         return qs

@@ -23,14 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = '9@gp5arfs82x5sj!p0k1@0*@v!6q^nco560_wj)vt%5v&qgf%0'
 #
 # # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['tjob.herokuapp.com', 'localhost:8000']
+ALLOWED_HOSTS = ['tjob.herokuapp.com', 'localhost', '192.168.0.116']
 
 
 # Application definition
@@ -84,29 +82,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Tjob.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-# DATABASES = {
-#     # 'default': {
-#     #     'ENGINE': 'django.db.backends.sqlite3',
-#     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     # }
-#
-#     'default': {
-#             'ENGINE': 'django.db.backends.postgresql',
-#             'NAME': 'Tjob',
-#             'USER': 'postgres',
-#             'PASSWORD': 'postgres',
-#             'HOST': '127.0.0.1',
-#             'PORT': '5432',
-#     }
-# }
-
-
-
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -155,6 +130,8 @@ pt_BR_formats.DATE_FORMAT = "d/b/Y"
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (

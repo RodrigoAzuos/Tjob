@@ -60,7 +60,7 @@ class PerfilSerializer(serializers.ModelSerializer):
     class Meta:
         model = Perfil
         fields = ('id', 'nome', 'telefone', 'data_nascimento', 'sexo',
-                  'perfil_profissional', 'experiencia', 'usuario', 'endereco',)
+                  'perfil_profissional', 'gitHub', 'experiencia', 'usuario', 'endereco',)
 
     def create(self, validated_data):
         endereco_data = validated_data.pop('endereco')
@@ -72,25 +72,27 @@ class PerfilSerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
-    comentarios = ComentarioSerializer(many=True)
+    comentarios = ComentarioSerializer(many=True, read_only=True)
     curtidas = PerfilSerializer(many=True, read_only=True)
     escolhido = PerfilSerializer(many=False, read_only=True)
 
     class Meta:
         model = Job
         fields = (
-        'id', 'status', 'descricao', 'criador', 'nome_criador', 'publico', 'escolhido', 'comentarios', 'curtidas',
+        'id', 'status','titulo', 'descricao', 'criador', 'nome_criador', 'publico', 'escolhido', 'comentarios', 'curtidas',
         'cidade',)
+        read_only_fields = ('id','nome_criador','comentarios', 'curtidas')
 
 
 class JobSimplesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ('id', 'status', 'descricao', 'criador', 'nome_criador', 'publico', 'curtidas',)
+        fields = ('id', 'status', 'titulo', 'descricao', 'criador', 'nome_criador', 'publico', 'curtidas',)
         read_only_fields = ('id',)
 
 
 class ChatSerializer(serializers.ModelSerializer):
+    participantes = serializers.StringRelatedField(many=True, read_only=True)
     class Meta:
         model = Chat
         fields = ('id', 'participantes')

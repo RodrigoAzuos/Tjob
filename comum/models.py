@@ -25,7 +25,7 @@ class Job(Base):
     descricao = models.TextField('Descrição',  blank=False, null=False, help_text= 'Fale detalhes do serviço pretendido.')
     publico = models.BooleanField('Publico', default=True, blank=False, null=False)
     criador = models.ForeignKey('Perfil', on_delete=models.CASCADE, related_name= 'Jobs', blank=False, null=False)
-    escolhido = models.OneToOneField('Perfil', related_name= 'matches', blank=True, null=True)
+    escolhido = models.ForeignKey('Perfil', related_name= 'matches', blank=True, null=True)
 
     class Meta:
 
@@ -106,7 +106,7 @@ class Perfil(Base):
 
     sexo = models.CharField('Sexo', max_length=16, choices=SEXO_CHOICES, blank=False, null=False)
     telefone = models.CharField('Telefone', max_length=16, blank=False, null=False)
-    data_nascimento = models.DateField('Data de nascimento', blank=False, null=False)
+    data_nascimento = models.CharField('Data de nascimento',max_length=20, blank=False, null=False)
     perfil_profissional = models.TextField('Perfil profissional', blank=False, null=False, help_text='Formação, Cursos extras')
     experiencia = models.TextField('Experiencia', blank=True, null=True, help_text= 'Projetos feitos')
     gitHub = models.CharField('GitHub', max_length=56, null=True, blank=True)

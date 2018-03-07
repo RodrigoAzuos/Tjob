@@ -11,7 +11,7 @@ class ComentarioInline(admin.TabularInline):
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display =  ('status', 'descricao', 'criador', 'escolhido', 'quant_curtidas','get_comentarios')
+    list_display =  ('status', 'descricao', 'criador', 'quant_curtidas','get_comentarios')
 
     inlines = (ComentarioInline, )
 

@@ -8,6 +8,8 @@ router = DefaultRouter()
 router.register(r'job', views.JobViewSet)
 router.register(r'perfil', views.PerfilViewSet)
 router.register(r'users', views.UserViewSet)
+
+
 urlpatterns =[
     url(r'^token/', obtain_auth_token, name='api-token'),
     url(r'^', include(router.urls)),
@@ -16,8 +18,8 @@ urlpatterns =[
     url(r'^job/(?P<job_pk>\d+)/perfil/(?P<perfil_pk>\d+)/$', views.JobViewSet.escolhido, name='escolher_perfil'),
     url(r'^job/(?P<job_pk>\d+)/reabrir/$', views.JobViewSet.reabrir_job, name= 'reabrir_job'),
 
-    url(r'^perfil/logado', views.PerfilLogado.as_view({'get': 'list'}), name= 'perfil_logado'),
-    url(r'^users/logado', views.UsruarioLogado.as_view({'get': 'list'}), name= 'usuario_logado'),
+    url(r'^perfil-logado/$', views.PerfilLogado.as_view({'get': 'list'}), name= 'perfil_logado'),
+    url(r'^usuario-logado/$', views.UsruarioLogado.as_view({'get': 'list'}), name= 'usuario_logado'),
 
     url(r'^job/(?P<pk>\d+)/comentarios/$',
             views.ComentarioViewSet.as_view({'post': 'create', 'get': 'list'}),
